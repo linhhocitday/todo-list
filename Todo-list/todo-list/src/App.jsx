@@ -26,16 +26,30 @@ const App = () => {
     e.preventDefault();
 
     setTasks([{ id: id++, name: inputValue, completed: false }, ...tasks]);
+    setInputValue("");
   };
 
   const pendingTasks = tasks.filter((task) => task.completed === false);
 
-  const completedTasks = tasks.filter((task) => task.completed === true);
-
   //TODO: make filter options works
   const changeFilterOption = (e, id) => {
-    console.log(e.target.checked);
-    console.log(id);
+    let checkedOption = filterOptions.find(
+      (filterOption) => filterOption.checked === true
+    );
+
+    setFilterOptions((filterOptions) => {
+      return filterOptions.map((filterOption) => {
+        if (filterOption.id === id) {
+          if (checkedOption.id !== id) {
+            checkedOption.checked = false;
+          }
+
+          return { ...filterOption, checked: e.target.checked };
+        }
+
+        return filterOption;
+      });
+    });
   };
 
   const updateTask = (e, id) => {
@@ -59,12 +73,25 @@ const App = () => {
   };
 
   const clearAll = () => {
-    if (confirm("Are you sure you want to delete all task?")) {
+    if (confirm("Are you sure you want to delete all tasks?")) {
       setTasks([]);
     } else {
       return tasks;
     }
   };
+
+  let checkedOption = filterOptions.find(
+    (filterOption) => filterOption.checked === true
+  );
+
+  //* check again
+  let filtered = tasks.filter((task) =>
+    checkedOption.name === "All"
+      ? true
+      : checkedOption.name === "Completed"
+      ? task.completed
+      : !task.completed
+  );
 
   return (
     <div className="container">
@@ -77,7 +104,7 @@ const App = () => {
         />
         <FilterOptions options={filterOptions} onChange={changeFilterOption} />
         <TodoItems
-          todoItems={tasks}
+          todoItems={filtered}
           onChange={updateTask}
           onClick={deleteTask}
         />

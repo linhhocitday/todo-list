@@ -215,3 +215,10 @@ div.todo-update.flex {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.blank {
+  margin: 40px 0 80px;
+  font-style: italic;
+  color: rgba(0, 28, 48, 0.6);
+  text-align: center;
+}
